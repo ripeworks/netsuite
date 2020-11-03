@@ -1,0 +1,10 @@
+{
+  "name": "@ripeworks/netsuite",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
+  "main": "./index",
+  "dependencies": {
+    "got": "^11.8.0",
+    "oauth-1.0a": "^2.2.6"
+  }
+}
