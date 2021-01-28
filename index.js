@@ -97,11 +97,11 @@ class NetSuiteRest {
   }
 
   async suiteql(query, options = {}) {
-    const { query, ...fetchOptions } = options;
+    const { query: urlQuery, ...fetchOptions } = options;
     const accountPath = this.getAccountPath();
     const method = "POST";
     const url = `https://${accountPath}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql${
-      query ? `?${querystring.stringify(query)}` : ""
+      urlQuery ? `?${querystring.stringify(urlQuery)}` : ""
     }`;
     const authorization = this.getAuthorizationHeader({ url, method });
 
