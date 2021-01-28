@@ -40,7 +40,7 @@ class NetSuiteRest {
     return this.accountId.toLowerCase().replace("_", "-");
   }
 
-  async request({ body, path, method = "GET" }) {
+  async request({ body, path, method = "GET", options = {} }) {
     const accountPath = this.getAccountPath();
     const url = `https://${accountPath}.suitetalk.api.netsuite.com/services/rest/record/v1${path}`;
     const authorization = this.getAuthorizationHeader({ url, method });
@@ -51,6 +51,7 @@ class NetSuiteRest {
         json: body,
         responseType: "json",
         headers: { Authorization: authorization },
+        ...options,
       });
 
       return res.body;
@@ -64,7 +65,13 @@ class NetSuiteRest {
     }
   }
 
-  async restlet({ body, method = "GET", deployId = "1", scriptId }) {
+  async restlet({
+    body,
+    method = "GET",
+    deployId = "1",
+    scriptId,
+    options = {},
+  }) {
     const accountPath = this.accountId.toLowerCase().replace("_", "-");
     const url = `https://${accountPath}.restlets.api.netsuite.com/app/site/hosting/restlet.nl?deploy=${deployId}&script=${scriptId}`;
     const authorization = this.getAuthorizationHeader({ url, method });
@@ -75,6 +82,7 @@ class NetSuiteRest {
         json: body,
         responseType: "json",
         headers: { Authorization: authorization },
+        ...options,
       });
 
       return res.body;
@@ -88,11 +96,12 @@ class NetSuiteRest {
     }
   }
 
-  async suiteql(query, options = null) {
+  async suiteql(query, options = {}) {
+    const { query, ...fetchOptions } = options;
     const accountPath = this.getAccountPath();
     const method = "POST";
     const url = `https://${accountPath}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql${
-      options ? `?${querystring.stringify(options)}` : ""
+      query ? `?${querystring.stringify(query)}` : ""
     }`;
     const authorization = this.getAuthorizationHeader({ url, method });
 
@@ -102,6 +111,7 @@ class NetSuiteRest {
         json: { q: query },
         responseType: "json",
         headers: { Authorization: authorization, Prefer: "transient" },
+        ...fetchOptions,
       });
 
       return res.body;
